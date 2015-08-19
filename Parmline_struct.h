@@ -1,0 +1,14 @@
+#pragma once
+#include "vector_struct.h"
+typedef struct PARMLINE2D_TYP 
+{
+	POINT2D p0;
+	POINT2D P1;
+	VECTOR2D v;
+} PARMLINE2D,*PARMLINE2D_PTR;
+typedef struct PARMLINE3D_TYP
+{
+	POINT3D P0;
+	POINT3D P1;
+	VECTOR3D v;
+} PARMLINE3D,*PARAMLINE3D_PTR;

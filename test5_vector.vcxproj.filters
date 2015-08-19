@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="vector_struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2_class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3_class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4_class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix_struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Parmline_struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Parmline2_class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane_struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Quat_struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Quat_class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Polar2_struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Polar2_class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylindrical3_struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylindrical3_class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Spherical3_struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Spherical3_class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MathConstant.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix1x3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix1x4.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix1x2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix2x2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix3x3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4x4.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix3x2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4x3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FixP.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MathAPI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Point2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Point3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="triangle_look.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
