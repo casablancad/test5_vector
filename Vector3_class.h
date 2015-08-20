@@ -46,7 +46,7 @@ namespace Tool
 			 assert(i>=0 && i<=2);
 			 return m_M[i];
 		 }
-		 inline Type &M(int i) const
+		 inline Type &M(int i) 
 		 {
 			 assert(i>=0 && i<=2);
 			 return m_M[i];

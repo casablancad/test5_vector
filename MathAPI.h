@@ -1,6 +1,6 @@
 #pragma once
 #include "MathConstant.h"
-#include "triangle_look.h"
+#include "triangle_dis_look.h"
 #include "Point2.h"
 #include "Point3.h"
 #include "Polar2_class.h"
@@ -8,6 +8,9 @@
 #include "Spherical3_class.h"
 #include "Matrix3x2.h"
 #include "Matrix4x3.h"
+#include "Parmline3_class.h"
+#include "Vector2_class.h"
+
 namespace Tool
 {
 	//坐标系支持函数
@@ -31,7 +34,7 @@ namespace Tool
 		y=polar.r()*cos(polar.theta());
 	}
 	template<typename Type>
-	void Point2_To_PolarRTh(const Point2<Type> &rect,Type *r,Type *theta)
+	void Point2_To_PolarRTh(const Point2<Type> &rect,Type &r,Type &theta)
 	{
 		r=sqrt(pow(rect.X(),2)+pow(rect.Y(),2));
 		theta=arctan(rect.Y()/rect.X());
@@ -44,7 +47,7 @@ namespace Tool
 		rect.Z()=cy1.z();
 	}
 	template<typename Type>
-	void Cylindrical3_To_RectXYZ(const Cylindrical3<Type> &cy1,Type *x,Type *y,Type *z)
+	void Cylindrical3_To_RectXYZ(const Cylindrical3<Type> &cy1,Type &x,Type &y,Type &z)
 	{
 		x=(cy1.r())*(cos(cy1.theta()));
 		y=(cy1.r())*(sin(cy1.theta()));
@@ -53,14 +56,14 @@ namespace Tool
 	template<typename Type>
 	void Point3_To_Cylindrical3(const Point3<Type> &rect,Cylindrical3<Type> &cy1)
 	{
-		cy1.r()=sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+		cy1.r()=sqrt(pow(rect.X(),2)+pow(rect.Y(),2)+pow(rect.Z(),2));
 		cy1.theta()=arctan(rect.Y()/rect.X());
 		cy1.z()=rect.Z();
 	}
 	template<typename Type>
 	void Point3_To_CylindricalRThZ(const Point3<Type> &rect,Type &r,Type &theta,Type &z)
 	{
-		r=sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+		r=sqrt(pow(rect.X(),2)+pow(rect.Y(),2)+pow(rect.Z(),2));
 		theta=arctan(rect.Y()/rect.X());
 		z=rect.Z();
 	}
@@ -70,7 +73,6 @@ namespace Tool
 		rect.X()=sph.p()*sin(sph.theta())*cos(sph.phi());
 		rect.Y()=sph.p()*sin(sph.theta())*sin(sph.phi());
 		rect.Z()=sph.p()*cos(sph.theta());
-		return rect;
 	}
 	template<typename Type>
 	void Spherical3_To_RectXYZ(const Spherical3<Type> &sph,Type &x,Type &y,Type &z)
@@ -96,7 +98,7 @@ namespace Tool
 	}
 
 
-	//向量支持函数
+	//2D向量支持函数
 	template<typename Type>
 	void Vector2__Add(const Vector2<Type> &va,const Vector2<Type> &vb,Vector2<Type> &vsum)
 	{
@@ -109,40 +111,6 @@ namespace Tool
 		Vector2<Type> vsum;
 		vsum.X()=va.X()+vb.X();
 		vsum.Y()=va.Y()+vb.Y();
-		return vsum;
-	}
-	template<typename Type>
-	void Vector3_Add(const Vector3<Type> &va,const Vector3<Type> &vb,Vector3<Type> &vsum)
-	{
-		vsum.X()=va.X()+vb.X();
-		vsum.Y()=va.Y()+vb.Y();
-		vsum.Z()=va.Z()+vb.Z();
-	}
-	template<typename Type>
-	Vector3<Type> Vector3_Add(const Vector3<Type> &va,const Vector3<Type> &vb)
-	{
-		Vector3<Type> vsum;
-		vsum.X()=va.X()+vb.X();
-		vsum.Y()=va.Y()+vb.Y();
-		vsum.Z()=va.Z()+vb.Z();
-		return vsum;
-	}
-	template<typename Type>
-	void Vector4_Add(const Vector4<Type> &va,const Vector4<Type> &vb,Vector4<Type> &vsum)
-	{
-		vsum.X()=va.X()+vb.X();
-		vsum.Y()=va.Y()+vb.Y();
-		vsum.Z()=va.Z()+vb.Z();
-		vsum.W()=va.W()+vb.W();
-	}
-	template<typename Type>
-	Vector4<Type> Vector4_Add(const Vector4<Type> &va,const Vector4<Type> &vb)
-	{
-		Vector4<Type> vsum;
-		vsum.X()=va.X()+vb.X();
-		vsum.Y()=va.Y()+vb.Y();
-		vsum.Z()=va.Z()+vb.Z();
-		vsum.W()=va.W()+vb.W();
 		return vsum;
 	}
 	template<typename Type>
@@ -160,81 +128,16 @@ namespace Tool
 		return vdiff;
 	}
 	template<typename Type>
-	void Vector3_Sub(const Vector3<Type> &va,const Vector3<Type> &vb,Vector3<Type> &vdiff)
-	{
-		vdiff.X()=va.X()-vb.X();
-		vdiff.Y()=va.Y()-vb.Y();
-		vdiff.Z()=va.Z()-vb.Z();
-	}
-	template<typename Type>
-	Vector3<Type> Vector3Sub(const Vector3<Type> &va,const Vector3<Type> &vb)
-	{
-		Vector3<Type> vdiff;
-		vdiff.X()=va.X()-vb.X();
-		vdiff.Y()=va.Y()-vb.Y();
-		vdiff.Z()=va.Z()-vb.Z();
-		return vdiff;
-	}
-	template<typename Type>
-	void Vector4_Sub(const Vector4<Type> va,const Vector4<Type> vb,Vector4<Type> vdiff)
-	{
-		vdiff.X()=va.X()-vb.X();
-		vdiff.Y()=va.Y()-vb.Y();
-		vdiff.Z()=va.Z()-vb.Z();
-		vdiff.W()=va.W()-vb.W();
-	}
-	template<typename Type>
-	Vector4<Type> Vector4_Sub(const Vector4<Type> &va,const Vector4<Type> &vb)
-	{
-		Vector4<Type> vdiff;
-		vdiff.X()=va.X()-vb.X();
-		vdiff.Y()=va.Y()-vb.Y();
-		vdiff.Z()=va.Z()-vb.Z();
-		vdiff.W()=va.W()-vb.W();
-		return vdiff;
-	}
-	template<typename Type>
 	void Vector2_Scale(const Type &k,const Vector2<Type> &va,Vector2<Type> &vscaled)
 	{
 		vscaled.X()=k*va.X();
 		vscaled.Y()=k*va.Y();
 	}
 	template<typename Type>
-	void Vector2_Scale(const Type &k,const Vector2<Type> &va)
+	void Vector2_Scale(const Type &k, Vector2<Type> &va)
 	{
 		va.X()*=k;
 		va.Y()*=k;
-	}
-	template<typename Type>
-	void Vector3_Scale(const Type &k,const Vector3<Type> &va,Vector3<Type> &vscaled)
-	{
-	      vscaled.X()=k*va.X();
-		  vscaled.Y()=k*va.Y();
-		  vscaled.Z()=k*va.Z();
-	}
-	template<typename Type>
-	void Vector3_Scale(const Type &k,const Vector3<Type> &va)
-	{
-		va.X()*=k;
-		va.Y()*=k;
-		va.Z()*=k;
-	}
-	template<typename Type>
-	void Vector4_Scale(const Type &k,const Vector4<Type> &va,Vector4<Type> &vscaled)
-	{
-		vscaled.X()=k*va.X();
-		vscaled.Y()=k*va.Y();
-		vscaled.Z()=k*va.Z();
-		vscaled.W()=1;
-	
-	}
-	template<typename Type>
-	void Vector4_Scale(const Type &k,const Vector4<Type> &va)
-	{
-		va.X()*=k;
-		va.Y()*=k;
-		va.Z()*=k;
-		va.W()=1;
 	}
 	template<typename Type>
 	Type Vector2_Dot(const Vector2<Type> &va,const Vector2<Type> &vb)
@@ -243,13 +146,106 @@ namespace Tool
 		return vc;
 	}
 	template<typename Type>
-	Type Vector3_Dot(const Vector3<Type> &va,const Vector3<Type> &vb)
+	Type Vector2_Length(const Vector2<Type> &va)
 	{
-		Type vc=va.X()*vb.X()+va.Y()*vb.Y()+va.Z()*vb.Z();
-		return vc;
+		Type len=sqrtf(pow(va.X(),2)+pow(va.Y(),2));
+		return len;
 	}
 	template<typename Type>
-	Type Vector4_Dot(const Vector4<Type> &va,const Vector4<Type> &vb)
+	Type Vector2_Lenght_Fast(Vector2<Type> &va)
+	{
+
+		Type vn=Fast_Distance_2D(va.X(),va.Y());
+		return vn;
+	}
+	template<typename Type>
+	void Vector2_Normalize(Vector2<Type> &va)
+	{
+		Type len=Vector2_Length(va);
+		if(len<EPSILON_E5)
+			return;
+		Type len_inv=1/len;
+		va.X()=va.X()*len_inv;
+		va.Y()=va.Y()*len_inv;
+	}
+	template<typename Type>
+	void Vector2_Normalize(const Vector2<Type> &va,Vector2<Type> &vn)
+	{
+		vn.MakeZero();
+		Type len=Vector2Length(va);
+		if(len<EPSILON_E5)
+			return;
+		Type len_inv=1/len;
+		vn.X()=va.X()*len_inv;
+		vn.Y()=va.Y()*len_inv;
+	}
+	template<typename Type>
+	void Vector2_Build(const Vector2<Type> &init,const Vector2<Type> &term,Vector2<Type> &result)
+	{
+		result.X()=term.X()-init.X();
+		result.Y()=term.Y()-init.Y();
+	}
+	template<typename Type>
+	void Vector2_Print(Vector2<Type> &va,char *name="v")
+	{
+		Write_Error("\n%s=[",name);
+		for(int index=0;index<2;index++)
+			Write_Error("%f, ",va[index]);
+		Write_Error("]");
+	}
+
+
+
+	//3D向量支持函数
+
+	template<typename Type>
+	void Vector3_Add(const Vector3<Type> &va,const Vector3<Type> &vb,Vector3<Type> &vsum)
+	{
+		vsum.X()=va.X()+vb.X();
+		vsum.Y()=va.Y()+vb.Y();
+		vsum.Z()=va.Z()+vb.Z();
+	}
+	template<typename Type>
+	Vector3<Type> Vector3_Add(const Vector3<Type> &va,const Vector3<Type> &vb)
+	{
+		Vector3<Type> vsum;
+		vsum.X()=va.X()+vb.X();
+		vsum.Y()=va.Y()+vb.Y();
+		vsum.Z()=va.Z()+vb.Z();
+		return vsum;
+	}
+	template<typename Type>
+	void Vector3_Sub(const Vector3<Type> &va,const Vector3<Type> &vb,Vector3<Type> &vdiff)
+	{
+		vdiff.X()=va.X()-vb.X();
+		vdiff.Y()=va.Y()-vb.Y();
+		vdiff.Z()=va.Z()-vb.Z();
+	}
+	template<typename Type>
+	Vector3<Type> Vector3_Sub(const Vector3<Type> &va,const Vector3<Type> &vb)
+	{
+		Vector3<Type> vdiff;
+		vdiff.X()=va.X()-vb.X();
+		vdiff.Y()=va.Y()-vb.Y();
+		vdiff.Z()=va.Z()-vb.Z();
+		return vdiff;
+	}
+	template<typename Type>
+	void Vector3_Scale(const Type &k,const Vector3<Type> &va,Vector3<Type> &vscaled)
+	{
+		vscaled.X()=k*va.X();
+		vscaled.Y()=k*va.Y();
+		vscaled.Z()=k*va.Z();
+	}
+	template<typename Type>
+	void Vector3_Scale(const Type &k,Vector3<Type> &va)
+	{
+		va.X()*=k;
+		va.Y()*=k;
+		va.Z()*=k;
+	}
+	template<typename Type>
+	Type Vector3_Dot(const Vector3<Type> &va,const Vector3<Type> &vb)
 	{
 		Type vc=va.X()*vb.X()+va.Y()*vb.Y()+va.Z()*vb.Z();
 		return vc;
@@ -270,6 +266,135 @@ namespace Tool
 		vn.Z()=va.X()*vb.Y()-vb.X()*va.Y();
 		return vn;
 	}
+	template<typename Type>
+	Type Vector3_Length(const Vector3<Type> &va)
+	{
+		Type len=sqrtf(pow(va.X(),2)+pow(va.Y(),2)+pow(va.Z(),2));
+		return len;
+	}
+
+	template<typename Type>
+	Type Vector3_Lenght_Fast(Vector3<Type> &va)
+	{
+
+		Type vn=Fast_Distance_3D(va.X(),va.Y(),va.Z());
+		return vn;
+	}
+	template<typename Type>
+	void Vector3_Normalize( Vector3<Type> &va)
+	{
+		Type len=Vector3_Length(va);
+		if(len<EPSILON_E5)
+			return;
+		Type len_inv=1/len;
+		va.X()=va.X()*len_inv;
+		va.Y()=va.Y()*len_inv;
+		va.Z()=va.Z()*len_inv;
+	}
+	template<typename Type>
+	void Vector3_Normalize(const Vector3<Type> &va,Vector3<Type> &vn)
+	{
+		vn.MakeZero();
+		Type len=Vector3Length(va);
+		if(len<EPSILON_E5)
+			return;
+		Type len_inv=1/len;
+		vn.X()=va.X()*len_inv;
+		vn.Y()=va.Y()*len_inv;
+		vn.Z()=va.Z()*len_inv;
+	}
+	template<typename Type>
+	void Vector3_Build(const Vector3<Type> &init,const Vector3<Type> &term,Vector3<Type> &result)
+	{
+		result.X()=term.X()-init.X();
+		result.Y()=term.Y()-init.Y();
+		result.Z()=term.Z()-init.Z();
+	}
+	template<typename Type>
+	Type Vector3_CosTh(const Vector3<Type> &va,const Vector3<Type> &vb)
+	{
+		Type vc=Vector3_Dot(va,vb)/(Vector3_Length(va)*Vector3_Length(vb));
+		return vc;
+	}
+	template<typename Type>
+	void Vector3_Print(Vector3<Type> &va,char *name="v")
+	{
+		Write_Error("\n%s=[",name);
+		for(int index=0;index<3;index++)
+			Write_Error("%f, ",va[index]);
+		Write_Error("]");
+	}
+
+
+	//4D向量支持函数
+
+	template<typename Type>
+	void Vector4_Add(const Vector4<Type> &va,const Vector4<Type> &vb,Vector4<Type> &vsum)
+	{
+		vsum.X()=va.X()+vb.X();
+		vsum.Y()=va.Y()+vb.Y();
+		vsum.Z()=va.Z()+vb.Z();
+		vsum.W()=va.W()+vb.W();
+	}
+	template<typename Type>
+	Vector4<Type> Vector4_Add(const Vector4<Type> &va,const Vector4<Type> &vb)
+	{
+		Vector4<Type> vsum;
+		vsum.X()=va.X()+vb.X();
+		vsum.Y()=va.Y()+vb.Y();
+		vsum.Z()=va.Z()+vb.Z();
+		vsum.W()=va.W()+vb.W();
+		return vsum;
+	}
+	
+	
+	template<typename Type>
+	void Vector4_Sub(const Vector4<Type> va,const Vector4<Type> vb,Vector4<Type> vdiff)
+	{
+		vdiff.X()=va.X()-vb.X();
+		vdiff.Y()=va.Y()-vb.Y();
+		vdiff.Z()=va.Z()-vb.Z();
+		vdiff.W()=va.W()-vb.W();
+	}
+	template<typename Type>
+	Vector4<Type> Vector4_Sub(const Vector4<Type> &va,const Vector4<Type> &vb)
+	{
+		Vector4<Type> vdiff;
+		vdiff.X()=va.X()-vb.X();
+		vdiff.Y()=va.Y()-vb.Y();
+		vdiff.Z()=va.Z()-vb.Z();
+		vdiff.W()=va.W()-vb.W();
+		return vdiff;
+	}
+	
+	
+	template<typename Type>
+	void Vector4_Scale(const Type &k,const Vector4<Type> &va,Vector4<Type> &vscaled)
+	{
+		vscaled.X()=k*va.X();
+		vscaled.Y()=k*va.Y();
+		vscaled.Z()=k*va.Z();
+		vscaled.W()=1;
+	
+	}
+	template<typename Type>
+	void Vector4_Scale(const Type &k,const Vector4<Type> &va)
+	{
+		va.X()*=k;
+		va.Y()*=k;
+		va.Z()*=k;
+		va.W()=1;
+	}
+	
+	
+	template<typename Type>
+	Type Vector4_Dot(const Vector4<Type> &va,const Vector4<Type> &vb)
+	{
+		Type vc=va.X()*vb.X()+va.Y()*vb.Y()+va.Z()*vb.Z();
+		return vc;
+	}
+	
+	
 	template<typename Type>
 	void Vector4_Cross(const Vector4<Type> &va,const Vector4<Type> &vb)
 	{
@@ -297,37 +422,15 @@ namespace Tool
 		vn.W()=1;
 		return vn;
 	}
-	template<typename Type>
-	Type Vector2_Length(const Vector2<Type> &va)
-	{
-		Type len=sqrtf(pow(va.X(),2)+pow(va.Y(),2));
-		return len;
-	}
-	template<typename Type>
-	Type Vector3_Length(const Vector3<Type> &va)
-	{
-		Type len=sqrtf(pow(va.X(),2)+pow(va.Y(),2)+pow(va.Z(),2));
-		return len;
-	}
+	
+	
 	template<typename Type>
 	Type Vector4_Length(const Vector4<Type> &va)
 	{
 		Type len=sqrtf(pow(va.X(),2)+pow(va.Y(),2)+pow(va.Z(),2)+pow(va.W(),2));
 		return len;
 	}
-	template<typename Type>
-	Type Vector2_Lenght_Fast(Vector2<Type> &va)
-	{
-	   Type vn=Fast_Distance_2D(va.X(),va.Y());
-	   return vn;
-	}
-	template<typename Type>
-	Type Vector3_Lenght_Fast(Vector3<Type> &va)
-	{
 
-		Type vn=Fast_Distance_3D(va.X(),va.Y(),va.Z());
-		return vn;
-	}
 	template<typename Type>
 	Type Vector4_Lenght_Fast(Vector4<Type> &va)
 	{
@@ -335,50 +438,8 @@ namespace Tool
 		Type vn=Fast_Distance_3D(va.X(),va.Y(),va.Z());
 		return vn;
 	}
-	template<typename Type>
-	void Vector2_Normalize(const Vector2<Type> &va)
-	{
-		Type len=Vector2Length(va);
-		if(len<EPSILON_E5)
-			return;
-		Type len_inv=1/len;
-		va.X()=va.X()*len_inv;
-		va.Y()=va.Y()*len_inv;
-	}
-	template<typename Type>
-	void Vector2_Normalize(const Vector2<Type> &va,Vector2<Type> &vn)
-	{
-		vn.MakeZero();
-		Type len=Vector2Length(va);
-		if(len<EPSILON_E5)
-			return;
-		Type len_inv=1/len;
-		vn.X()=va.X()*len_inv;
-		vn.Y()=va.Y()*len_inv;
-	}
-	template<typename Type>
-	void Vector3_Normalize(const Vector3<Type> &va)
-	{
-		Type len=Vector2Length(va);
-		if(len<EPSILON_E5)
-			return;
-		Type len_inv=1/len;
-		va.X()=va.X()*len_inv;
-		va.Y()=va.Y()*len_inv;
-		va.Z()=va.Z()*len_inv;
-	}
-	template<typename Type>
-	void Vector3_Normalize(const Vector3<Type> &va,Vector3<Type> &vn)
-	{
-		vn.MakeZero();
-		Type len=Vector3Length(va);
-		if(len<EPSILON_E5)
-			return;
-		Type len_inv=1/len;
-		vn.X()=va.X()*len_inv;
-		vn.Y()=va.Y()*len_inv;
-		vn.Z()=va.Z()*len_inv;
-	}
+	
+	
 	template<typename Type>
 	void Vector4_Normalize(const Vector4<Type> &va)
 	{
@@ -404,19 +465,9 @@ namespace Tool
 		vn.Z()=va.Z()*len_inv;
 		vn.W()=1;
 	}
-	template<typename Type>
-	void Vector2_Build(const Vector2<Type> &init,const Vector2<Type> &term,Vector2<Type> &result)
-	{
-		result.X()=term.X()-init.X();
-		result.Y()=term.Y()-init.Y();
-	}
-	template<typename Type>
-	void Vector3_Build(const Vector3<Type> &init,const Vector3<Type> &term,Vector3<Type> &result)
-	{
-		result.X()=term.X()-init.X();
-		result.Y()=term.Y()-init.Y();
-		result.Z()=term.Z()-init.Z();
-	}
+	
+
+	
 	template<typename Type>
 	void Vector4_Build(const Vector4<Type> &init,const Vector4<Type> &term,Vector4<Type> &result)
 	{
@@ -425,34 +476,15 @@ namespace Tool
 		result.Z()=term.Z()-init.Z();
 		result.W()=1;
 	}
-	template<typename Type>
-	Type Vector3_CosTh(const Vector3<Type> &va,const Vector3<Type> &vb)
-	{
-		Type vc=Vector3Dot(va,vb)/(Vector3Length(va)*Vector3Length(vb));
-		return vc;
-	}
+	
 	template<typename Type>
 	Type Vector4_CosTh(const Vector4<Type> &va,const Vector4<Type> &vb)
 	{
 		Type vc=Vector4Dot(va,vb)/(Vector4Length(va)*Vector4Length(vb));
 		return vc;
 	}
-	template<typename Type>
-	void Vector2_Print(Vector2<Type> &va,char *name="v")
-	{
-		Write_Error("\n%s=[",name);
-		for(int index=0;index<2;index++)
-			Write_Error("%f, ",va[index]);
-		Write_Error("]");
-	}
-	template<typename Type>
-	void Vector3_Print(Vector3<Type> &va,char *name="v")
-	{
-		Write_Error("\n%s=[",name);
-		for(int index=0;index<3;index++)
-			Write_Error("%f, ",va[index]);
-		Write_Error("]");
-	}
+	
+	
 	template<typename Type>
 	void Vector4_Print(Vector4<Type> &va,char *name="v")
 	{
@@ -751,22 +783,68 @@ namespace Tool
 	}
 
 	//2D和3D参数化支持函数
-	template<typename Type>
-	void Init_Param_Line2(const Point2<Type> &p_init,const Point2<Type> &p_term,Parmline2<Type> &p)
-	{
-		Vector2_Init(p.p0(),p_init);
-		Vector2_Init(p.p1(),p_term);
-		Vector2_Build(p_init,p_term,p.v());
-	}
-	template<typename Type>
-	void Compute_Parm_Line2D(Parmline2<Type> &p,Type &t,Point2<Type> &pt)
-	{
-		pt.X()=p.p0().X()+p.p1().X()*t;
-		pt.Y()=p.p1().Y()+p.p1().Y()*t;
-	}
-	template<typename Type>
-	int Intersect_Parm_Lines2D(Parmline2<Type> &p1,Parmline2<Type> &p2,Type &t1,Type &t2)
-	{
 
+	template<typename Type>
+	Parmline2<Type> Init_Param_Line2(const Vector2<Type> &p_init,const Vector2<Type> &p_term)
+	{
+		
+		return Parmline2<Type>(p_init,p_term);
+				//Vector2_Build(p_init,p_term,p.v());
+	}
+	template<typename Type>
+	void Compute_Parm_Line2D(const Parmline2<Type> &p,const Type &t,Vector2<Type> &pt)
+	{
+		pt.X()=p.p0().X()+p.v().X()*t;
+		pt.Y()=p.p0().Y()+p.v().Y()*t;
+	}
+	template<typename Type>
+	int Intersect_Parm_Lines2D(const Parmline2<Type> &p1,const Parmline2<Type> &p2,Type &t1,Type &t2)
+	{
+		float det_p1p2=(p1.v().X()*p2.v().Y()-p1.v().Y()*p2.v().X());
+		if(fabs(det_p1p2)<=EPSILON_E5)
+		{
+			return PARM_LINE_NO_INTERSECT;
+		}
+
+		t1=(p2.v().X()*(p1.p0().Y()-p2.p0().Y())-p2.v().Y()*(p1.p0().X()-p2.p0().X()))/det_p1p2;
+		t2=(p1.v().X()*(p1.p0().Y()-p2.p0().Y())-p1.v().Y()*(p1.p0().X()-p2.p0().X()))/det_p1p2;
+
+		if((t1>=0)&&(t1<1)&&(t2>=0)&&(t2<=1))
+			return PARM_LINE_INTERSECT_IN_SEGMENT;
+		else
+			return PARM_LINE_INTERSECT_OUT_SEGMENT;
+	}
+	template<typename Type>
+	int Intersect_Parm_Lines2D(const Parmline2<Type> &p1,const Parmline2<Type> &p2,Point2<Type> &pt)
+	{
+		float t1,t2,det_p1p2=(p1.v().X()*p2.v().Y()-p1.v().Y()*p2.v().X());
+		if(fabs(det_p1p2)<=EPSILON_E5)
+		{
+			return PARM_LINE_NO_INTERSECT;
+		}
+
+		t1=(p2.v().X()*(p1.p0().Y()-p2.p0().Y())-p2.v().Y()*(p1.p0().X()-p2.p0().X()))/det_p1p2;
+		t2=(p1.v().X()*(p1.p0().Y()-p2.p0().Y())-p1.v().Y()*(p1.p0().X()-p2.p0().X()))/det_p1p2;
+
+		pt.X()=p1.p0().X()+p1.v().X()*t1;
+		pt.Y()=p1.p0().Y()+p1.v().Y()*t2;
+		if((t1>=0)&&(t1<1)&&(t2>=0)&&(t2<=1))
+			return PARM_LINE_INTERSECT_IN_SEGMENT;
+		else
+			return PARM_LINE_INTERSECT_OUT_SEGMENT;
+	}
+	template<typename Type>
+	void Init_Param_Line3(Point3<Type> &p_init,Point3<Type> &p_term,Parmline3<Type> &p)
+	{
+		Vector3_Init(p.p0(),p_init);
+		Vector3_Init(p.p1(),p_term);
+		Vector3_Build(p_init,p_term,p.v());
+	}
+	template<typename Type>
+	void Compute_Parm_Line3D(const Parmline3<Type> &p,const Type &t,Point3<Type> &pt)
+	{
+		pt.X()=p.p0().X()+p.v().X()*t;
+		pt.Y()=p.p0().Y()+p.v().Y()*t;
+		pt.Z()=p.p0().Z()+p.v().Z()*t;
 	}
 }

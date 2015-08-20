@@ -59,19 +59,19 @@ namespace Tool
 // 	}
 
 	template <typename Type>
-	inline Type MIN(const Type a,const Type b)
+	inline Type MIN( Type &a, Type &b)
 	{
 		return ((a<b)?(a):(b));
 	}
 
 	template <typename Type>
-	inline Type MAX(const Type a,const Type b)
+	inline Type MAX( Type a, Type b)
 	{
 		return ((a>b)?(a):(b));
 	}
 
 	template <typename Type>
-	inline Type SWAP(const Type a,const Type b,const Type c)
+	inline Type SWAP( Type a, Type b, Type c)
 	{
 		t=a;
 		a=b;

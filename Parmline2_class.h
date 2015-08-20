@@ -1,6 +1,5 @@
 #pragma  once
 #include "Vector2_class.h"
-#include "Point2.h"
 namespace Tool
 {
 	template<typename Type>
@@ -11,24 +10,27 @@ namespace Tool
 		{
 
 		}
-		Parmline2(Point2<Type> &p0, Point2<Type> &p1)
+		Parmline2(Vector2<Type> &p0, Vector2<Type> &p1)
 		{
-			m_p0=p0;
-			m_p1=p1;
+			m_p0.X()=p0.X();
+			m_p0.Y()=p0.Y();
+			m_p1.X()=p1.X();
+			m_p1.Y()=p1.Y();
+			
 		}
-		inline Point2<Type> p0() const
+		inline Vector2<Type> p0() const
 		{
 			return m_p0;
 		}
-		inline Point2<Type> &p0()
+		inline Vector2<Type> &p0()
 		{
 			return m_p0;
 		}
-		inline Point2<Type> p1() const
+		inline Vector2<Type> p1() const
 		{
 			return m_p1;
 		}
-		inline Point2<Type> &p1()
+		inline Vector2<Type> &p1()
 		{
 			return m_p1;
 		}
@@ -48,7 +50,7 @@ namespace Tool
 		}
 	protected: 
 	private:
-		Point2<Type> m_p0;
-		Point2<Type> m_p1;
+		Vector2<Type> m_p0;
+		Vector2<Type> m_p1;
 	};
 }

@@ -15,7 +15,11 @@ namespace Tool
 			m_x=x;
 			m_y=y;
 		}
-
+		Vector2(Vector2<Type> &vsrc)
+		{
+			m_x=vsrc.X();
+			m_y=vsrc.Y();
+		}
 		inline Type X() const
 		{
 			return m_x;
@@ -54,17 +58,17 @@ namespace Tool
 			m_x=(Type)0;
 			m_y=(Type)0;
 		}
-		inline void Vector2_InitXY(const Vector2<Type> v,Type x,Type y)
+		inline void Vector2_InitXY(const Vector2<Type> &v,Type &x,Type &y)
 		{
 			v.X()=x;
 			v.Y()=y;
 		}
-		inline void Vector2_Init(const Vector2<Type> vdst,const Vector2<Type> vsrc)
-		{
-			vdst.X()=vsrc.X();
-			vdst.Y()=vsrc.Y();
-		}
-		inline void Vector2_Copy(const Vector2<Type> v)
+// 		inline void Vector2_Init(Vector2<Type> &vdst, const Vector2<Type> &vsrc)
+// 		{
+// 			vdst.X()=vsrc.X();
+// 			vdst.Y()=vsrc.Y();
+// 		}
+		inline void Vector2_Copy(const Vector2<Type> &v)
 		{
 			m_x=v.X();
 			m_y=v.Y();

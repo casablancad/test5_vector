@@ -90,6 +90,7 @@
     <ClInclude Include="Matrix_struct.h" />
     <ClInclude Include="Matrix3x3.h" />
     <ClInclude Include="Parmline2_class.h" />
+    <ClInclude Include="Parmline3_class.h" />
     <ClInclude Include="Parmline_struct.h" />
     <ClInclude Include="Plane_struct.h" />
     <ClInclude Include="Point2.h" />
@@ -98,7 +99,7 @@
     <ClInclude Include="Polar2_struct.h" />
     <ClInclude Include="Quat_class.h" />
     <ClInclude Include="Quat_struct.h" />
-    <ClInclude Include="triangle_look.h" />
+    <ClInclude Include="triangle_dis_look.h" />
     <ClInclude Include="Spherical3_class.h" />
     <ClInclude Include="Spherical3_struct.h" />
     <ClInclude Include="Vector3_class.h" />
