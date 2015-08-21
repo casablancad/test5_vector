@@ -26,17 +26,15 @@ namespace Tool
 			assert(i >= 0 && i <= 3);
 			return m_M[i];
 		}
-		inline Type M(int i, int j) const
+		inline Type M(int i) const
 		{
-			assert(i == 0);
-			assert(j >= 0 && j <= 3);
-			return m_M[j];
+			assert(i >= 0 && i <= 3);
+			return m_M[i];
 		}
-		inline Type &M(int i, int j)
+		inline Type &M(int i)
 		{
-			assert(i == 0);
-			assert(j >= 0 && j <= 3);
-			return m_M[j];
+			assert(i >= 0 && i <= 3);
+			return m_M[i];
 		}
 	private:
 		Type m_M[4];

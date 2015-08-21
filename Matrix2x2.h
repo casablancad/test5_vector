@@ -13,7 +13,7 @@ namespace Tool
 		{
 
 		}
-		Matrix2x2(const Type M[2][2])
+		Matrix2x2(Type M[2][2])
 		{
 			for(int i=0;i<2;i++)
 			{
@@ -23,7 +23,7 @@ namespace Tool
 				}
 			}
 		}
-		Matrix2x2(const Type m00,Type m01,Type m10,Type m11)
+		Matrix2x2(Type m00,Type m01,Type m10,Type m11)
 		{
 			m_M[0][0]=m00;
 			m_M[0][1]=m01;

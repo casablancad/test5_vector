@@ -85,18 +85,7 @@ namespace Tool
 			 v.Y()=y;
 			 v.Z()=z;
 		 }
-		 inline void Vector3_Init(const Vector3<Type> vdst,const Vector3<Type> vsrc)
-		 {
-			 vdst.X()=vsrc.X();
-			 vdst.Y()=vsrc.Y();
-			 vdst.Z()=vsrc.Z();
-		 }
-		 inline void Vector3_Copy(const Vector3<Type> v)
-		 {
-			 m_M[0]=v.X();
-			 m_M[1]=v.Y();
-			 m_M[2]=v.Z();
-		 }
+		 
 	
 	protected:
 	private:

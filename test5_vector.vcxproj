@@ -92,6 +92,7 @@
     <ClInclude Include="Parmline2_class.h" />
     <ClInclude Include="Parmline3_class.h" />
     <ClInclude Include="Parmline_struct.h" />
+    <ClInclude Include="Plane3.h" />
     <ClInclude Include="Plane_struct.h" />
     <ClInclude Include="Point2.h" />
     <ClInclude Include="Point3.h" />

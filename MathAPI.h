@@ -10,6 +10,7 @@
 #include "Matrix4x3.h"
 #include "Parmline3_class.h"
 #include "Vector2_class.h"
+#include "Plane3.h"
 
 namespace Tool
 {
@@ -347,7 +348,6 @@ namespace Tool
 		return vsum;
 	}
 	
-	
 	template<typename Type>
 	void Vector4_Sub(const Vector4<Type> va,const Vector4<Type> vb,Vector4<Type> vdiff)
 	{
@@ -378,7 +378,7 @@ namespace Tool
 	
 	}
 	template<typename Type>
-	void Vector4_Scale(const Type &k,const Vector4<Type> &va)
+	void Vector4_Scale(const Type &k,Vector4<Type> &va)
 	{
 		va.X()*=k;
 		va.Y()*=k;
@@ -441,9 +441,9 @@ namespace Tool
 	
 	
 	template<typename Type>
-	void Vector4_Normalize(const Vector4<Type> &va)
+	void Vector4_Normalize( Vector4<Type> &va)
 	{
-		Type len=Vector4Length(va);
+		Type len=Vector4_Length(va);
 		if(len<EPSILON_E5)
 			return;
 		Type len_inv=1/len;
@@ -456,7 +456,7 @@ namespace Tool
 	void Vector4_Normalize(const Vector4<Type> &va,Vector4<Type> &vn)
 	{
 		vn.MakeZero();
-		Type len=Vector4Length(va);
+		Type len=Vector4_Length(va);
 		if(len<EPSILON_E5)
 			return;
 		Type len_inv=1/len;
@@ -480,10 +480,9 @@ namespace Tool
 	template<typename Type>
 	Type Vector4_CosTh(const Vector4<Type> &va,const Vector4<Type> &vb)
 	{
-		Type vc=Vector4Dot(va,vb)/(Vector4Length(va)*Vector4Length(vb));
+		Type vc=Vector4_Dot(va,vb)/(Vector4_Length(va)*Vector4_Length(vb));
 		return vc;
 	}
-	
 	
 	template<typename Type>
 	void Vector4_Print(Vector4<Type> &va,char *name="v")
@@ -494,41 +493,14 @@ namespace Tool
 		Write_Error("]");
 	}
 
-	//矩阵支持函数
+
+	//2x2矩阵函数
+
 	template<typename Type>
-	void Mat_Init_2X2(Matrix2x2<Type> &ma,Type &m00,Type &m01,Type &m10,Type &m11)
+	void Mat_Init_2X2(Matrix2x2<Type> &ma,Type m00,Type m01,Type m10,Type m11)
 	{
 		ma.M(0,0)=m00;ma.M(0,1)=m01;
 		ma.M(1,0)=m10;ma.M(1,1)=m11;
-	}
-	template<typename Type>
-	void Mat_Init_3X2(Matrix3x2<Type> &ma,Type &m00,Type &m01,
-		                                  Type &m10,Type &m11,
-										  Type &m20,Type &m21)
-	{
-		ma.M(0,0)=m00;ma.M(0,1)=m01;
-		ma.M(1,0)=m10;ma.M(1,1)=m11;
-		ma.M(2,0)=m20;ma.M(2,1)=m21;
-	}
-	template<typename Type>
-	void Mat_Init_3X3(Matrix3x3<Type> &ma,Type &m00,Type &m01,Type &m02,
-		                                 Type &m10,Type &m11,Type &m12,
-		                                 Type &m20,Type &m21,Type &m22)
-	{
-		ma.M(0,0)=m00;ma.M(0,1)=m01;ma.M(0,2)=m02;
-		ma.M(1,0)=m10;ma.M(1,1)=m11;ma.M(1,2)=m12;
-		ma.M(2,0)=m20;ma.M(2,1)=m21;ma.M(2,2)=m22;
-	}
-	template<typename Type>
-	void Mat_Init_4X4(Matrix4x4<Type> &ma, Type &m00, Type &m01, Type &m02, Type &m03, 
-		                                Type &m10, Type &m11, Type &m12, Type &m13, 
-		                                Type &m20, Type &m21, Type &m22, Type &m23, 
-		                                Type &m30, Type &m31, Type &m32, Type &m33)
-	{
-		ma.M(0,0)=m00;ma.M(0,1)=m01;ma.M(0,2)=m02;ma.M(0,3)=m03;
-		ma.M(1,0)=m10;ma.M(1,1)=m11;ma.M(1,2)=m12;ma.M(1,3)=m13;
-		ma.M(2,0)=m20;ma.M(2,1)=m21;ma.M(2,2)=m22;ma.M(2,3)=m23;
-		ma.M(3,0)=m30,ma.M(3,1)=m31;ma.M(3,2)=m32,ma.M(3,3)=m33;
 	}
 	template<typename Type>
 	void Mat_Add_2X2(Matrix2x2<Type> &ma,Matrix2x2<Type> &mb,Matrix2x2<Type> &msum)
@@ -537,6 +509,57 @@ namespace Tool
 		msum.M(0,1)=ma.M(0,1)+mb.M(0,1);
 		msum.M(1,0)=ma.M(1,0)+mb.M(1,0);
 		msum.M(1,1)=ma.M(1,1)+mb.M(1,1);
+	}
+	template<typename Type>
+	void Mat_Mul_2X2(const Matrix2x2<Type> &ma,const Matrix2x2<Type> &mb,Matrix2x2<Type> &mprod)
+	{
+		mprod.M(0,0)=ma.M(0,0)*mb.M(0,0)+ma.M(0,1)*mb.M(1,0);
+		mprod.M(0,1)=ma.M(0,0)*mb.M(0,1)+ma.M(0,1)*mb.M(1,1);
+		mprod.M(1,0)=ma.M(1,0)*mb.M(0,0)+ma.M(1,1)*mb.M(1,0);
+		mprod.M(1,1)=ma.M(1,0)*mb.M(1,0)+ma.M(1,1)*mb.M(1,1);
+	}
+	template<typename Type>
+	Type Mat_Det_2X2(const Matrix2x2<Type> &m)
+	{
+		Type result=m.M(0,0)*m.M(1,1)-m.M(0,1)*m.M(1,0);
+		return result;
+	}
+	template<typename Type>
+	int Mat_Inverse_2X2(const Matrix2x2<Type> &m,Matrix2x2<Type> &mi)
+	{
+		float det=Mat_Det_2X2(m);
+		if(fabs(det)<EPSILON_E5)
+			return 0;
+		else{
+			float det_inv=1.0/det;
+			mi.M(0,0)=det_inv*(m.M(1,1));
+			mi.M(0,1)=det_inv*((-1)*m.M(0,1));
+			mi.M(1,0)=det_inv*((-1)*m.M(1,0));
+			mi.M(1,1)=det_inv*(m.M(1,1));
+			return 1;
+		}
+	}
+
+
+	//3x3矩阵函数
+
+	template<typename Type>
+	void Mat_Init_3X2(Matrix3x2<Type> &ma, Type m00,Type m01,
+		                                  Type m10,Type m11,
+										  Type m20,Type m21)
+	{
+		ma.M(0,0)=m00;ma.M(0,1)=m01;
+		ma.M(1,0)=m10;ma.M(1,1)=m11;
+		ma.M(2,0)=m20;ma.M(2,1)=m21;
+	}
+	template<typename Type>
+	void Mat_Init_3X3(Matrix3x3<Type> &ma,Type m00,Type m01,Type m02,
+		                                 Type m10,Type m11,Type m12,
+		                                 Type m20,Type m21,Type m22)
+	{
+		ma.M(0,0)=m00;ma.M(0,1)=m01;ma.M(0,2)=m02;
+		ma.M(1,0)=m10;ma.M(1,1)=m11;ma.M(1,2)=m12;
+		ma.M(2,0)=m20;ma.M(2,1)=m21;ma.M(2,2)=m22;
 	}
 	template<typename Type>
 	void Mat_Add_3X3(Matrix3x3<Type> &ma,Matrix3x3<Type> &mb,Matrix3x3<Type> &msum)
@@ -548,21 +571,17 @@ namespace Tool
 			}
 	}
 	template<typename Type>
-	void Mat_Add_4X4(Matrix4x4<Type> &ma,Matrix4x4<Type> &mb,Matrix4x4<Type> &msum)
+	void Mat_Mul_1X3_3X3(const Matrix1x3<Type> &ma,const Matrix3x3<Type> &mb,Matrix1x3<Type> &mprod)
 	{
-		for(int row=0;row<4;row++)
-			for(int col=0;clo<4;col++)
+		for(int col=0;col<3;col++)
+		{
+			float sum=0;
+			for(int row=0;row<3;row++)
 			{
-				msum.M(row,col)=ma.M(row,col)+mb.M(row,col);
+				sum+=(ma.M(row)*mb.M(row,col));
 			}
-	}
-	template<typename Type>
-	void Mat_Mul_2X2(const Matrix2x2<Type> &ma,const Matrix2x2<Type> &mb,Matrix2x2<Type> &mprod)
-	{
-		mprod.M(0,0)=ma.M(0,0)*mb.M(0,0)+ma.M(0,1)*mb.M(1,0);
-		mprod.M(0,1)=ma.M(0,0)*mb.M(0,1)+ma.M(0,1)*mb.M(1,1);
-		mprod.M(1,0)=ma.M(1,0)*mb.M(0,0)+ma.M(1,1)*mb.M(1,0);
-		mprod.M(1,1)=ma.M(1,0)*mb.M(1,0)+ma.M(1,1)*mb.M(1,1);
+			mprod.M(col)=sum;
+		}
 	}
 	template<typename Type>
 	void Mat_Mul_3X3(const Matrix3x3<Type> &ma,const Matrix3x3<Type> &mb,Matrix3x3<Type> &mprod)
@@ -581,6 +600,78 @@ namespace Tool
 		}
 	}
 	template<typename Type>
+	Type Mat_Det_3X3(const Matrix3x3<Type> &m)
+	{
+		Type result=(m.M(0,0)*(m.M(1,1)*m.M(2,2)-m.M(1,2)*m.M(2,1))-
+			m.M(0,1)*(m.M(1,0)*m.M(2,2)-m.M(2,0)*m.M(1,2))+
+			m.M(0,2)*(m.M(1,0)*m.M(2,1)-m.M(2,0)*m.M(1,1)));
+		return result;
+	}
+	template<typename Type>
+	int Mat_Inverse_3X3(const Matrix3x3<Type> &m,Matrix3x3<Type> &mi)
+	{
+		float det=Mat_Det_3X3(m);
+		if(fabs(det)<EPSILON_E5)
+			return 0;
+		else
+		{
+			float det_inv=1.0/det;
+			mi.M(0,0)=det_inv*(m.M(1,1)*m.M(2,2)-m.M(2,1)*m.M(1,2));
+			mi.M(1,0)=-det_inv*(m.M(1,0)*m.M(2,2)-m.M(2,0)*m.M(1,2));
+			mi.M(2,0)=det_inv*(m.M(1,0)*m.M(2,1)-m.M(2,0)*m.M(1,1));
+
+			mi.M(0,1)=-det_inv*(m.M(0,1)*m.M(2,2)-m.M(2,1)*m.M(0,2));
+			mi.M(1,1)=det_inv*(m.M(0,0)*m.M(2,2)-m.M(2,0)*m.M(0,2));
+			mi.M(2,1)=-det_inv*(m.M(0,0)*m.M(2,1)-m.M(2,0)*m.M(0,1));
+
+			mi.M(0,2)=det_inv*(m.M(0,1)*m.M(1,2)-m.M(1,1)*m.M(0,2));
+			mi.M(1,2)=-det_inv*(m.M(0,0)*m.M(1,2)-m.M(1,0)*m.M(0,2));
+			mi.M(2,2)=det_inv*(m.M(0,0)*m.M(1,1)-m.M(1,0)*m.M(0,1));
+			return 1;
+		}
+	}
+	template<typename Type>
+	void Mat_Mul_Vector3_3X3(const Vector3<Type> &va,const Matrix3x3<Type> &mb,Vector3<Type> &vprod)
+	{
+		for(int col=0;col<3;col++)
+		{
+			float sum=0;
+			for(int row=0;row<3;row++)
+			{
+				sum+=(va.M(row)*mb.M(row,col));
+			}
+			vprod.M(col)=sum;
+		}
+	}
+
+
+	//4x4矩阵函数
+
+	template<typename Type>
+	void Mat_Init_4X4(Matrix4x4<Type> &ma, Type &m00, Type &m01, Type &m02, Type &m03, 
+		                                Type &m10, Type &m11, Type &m12, Type &m13, 
+		                                Type &m20, Type &m21, Type &m22, Type &m23, 
+		                                Type &m30, Type &m31, Type &m32, Type &m33)
+	{
+		ma.M(0,0)=m00;ma.M(0,1)=m01;ma.M(0,2)=m02;ma.M(0,3)=m03;
+		ma.M(1,0)=m10;ma.M(1,1)=m11;ma.M(1,2)=m12;ma.M(1,3)=m13;
+		ma.M(2,0)=m20;ma.M(2,1)=m21;ma.M(2,2)=m22;ma.M(2,3)=m23;
+		ma.M(3,0)=m30,ma.M(3,1)=m31;ma.M(3,2)=m32,ma.M(3,3)=m33;
+	}
+	
+	
+	template<typename Type>
+	void Mat_Add_4X4(Matrix4x4<Type> &ma,Matrix4x4<Type> &mb,Matrix4x4<Type> &msum)
+	{
+		for(int row=0;row<4;row++)
+			for(int col=0;col<4;col++)
+			{
+				msum.M(row,col)=ma.M(row,col)+mb.M(row,col);
+			}
+	}
+	
+	
+	template<typename Type>
 	void Mat_Mul_4X4(const Matrix4x4<Type> &ma,const Matrix4x4<Type> &mb,Matrix4x4<Type> &mprod)
 	{
 		for(int row=0;row<4;row++)
@@ -597,21 +688,9 @@ namespace Tool
 		}
 	}
  
+	
 	template<typename Type>
-	void Mat_Mul_1X3_3X3(const Matrix1x3<Type> &ma,const Matrix3x3<Type> &mb,Matrix1x3<Type> &mprod)
-	{
-		for(int col=0;col<3;col++)
-		{
-			float sum=0;
-			for(int row=0;row<3;row++)
-			{
-				sum+=(ma.M(row)*mb.M(row,col));
-			}
-			mprod.M(col)=sum;
-		}
-	}
-	template<typename Type>
-	void Mat_Mul_1X4_4X4(const Matrix4x4<Type> &ma,const Matrix4x4<Type> &mb,Matrix1x4<Type> &mprod)
+	void Mat_Mul_1X4_4X4(const Matrix1x4<Type> &ma,const Matrix4x4<Type> &mb,Matrix1x4<Type> &mprod)
 	{
 		for(int col=0;col<4;col++)
 		{
@@ -623,21 +702,9 @@ namespace Tool
 			mprod.M(col)=sum;
 		}
 	}
+	
 	template<typename Type>
-	void Mat_Mul_Vector3_3X3(const Vector3<Type> &va,Matrix3x3<Type> &mb,Vector3<Type> vprod)
-	{
-		for(int col=0;col<2;col++)
-		{
-			float sum=0;
-			for(int row=0;row<2;row++)
-			{
-				sum+=(va.M(row)*mb.M(row,col));
-			}
-			vprod.M(col)=sum;
-		}
-	}
-	template<typename Type>
-	void Mat_Mul_Vector3_4X4(const Vector4<Type> &va,Matrix4x4<Type> &mb,Vector4<Type> vprod)
+	void Mat_Mul_Vector3_4X4(const Vector3<Type> &va,Matrix4x4<Type> &mb,Vector3<Type> &vprod)
 	{
 		for(int col=0;col<3;col++)
 		{
@@ -646,12 +713,11 @@ namespace Tool
 			{
 				sum+=(va.M(row)*mb.M(row,col));
 			}
-			sum+=mb.M(row,col);
 			vprod.M(col)=sum;
 		}
 	}
 	template<typename Type>
-	void Mat_Mul_Vector3_4X3(const Vector3<Type> &va,Matrix4x3<Type> &mb,Vector3<Type> vprod)
+	void Mat_Mul_Vector3_4X3(const Vector3<Type> &va,Matrix4x3<Type> &mb,Vector3<Type> &vprod)
 	{
 		for(int col=0;col<3;col++)
 		{
@@ -660,14 +726,13 @@ namespace Tool
 			{
 				sum+=(va.M(row)*mb.M(row,col));
 			}
-			sum+=mb.M(row,col);
 			vprod.M(col)=sum;
 		}
 	}
 	template<typename Type>
-	void Mat_Mul_Vector4_4X4(const Vector4<Type> &va,Matrix4x4<Type> &mb,Vector4<Type> vprod)
+	void Mat_Mul_Vector4_4X4(const Vector4<Type> &va,Matrix4x4<Type> &mb,Vector4<Type> &vprod)
 	{
-		for(int col=0;col<3;col++)
+		for(int col=0;col<4;col++)
 		{
 			float sum=0;
 			for(int row=0;row<4;row++)
@@ -679,7 +744,7 @@ namespace Tool
 
 	}
 	template<typename Type>
-	void Mat_Mul_Vector4_4X3(const Vector4<Type> &va,Matrix4x4<Type> &mb,Vector4<Type> vprod)
+	void Mat_Mul_Vector4_4X3(const Vector4<Type> &va,Matrix4x4<Type> &mb,Vector4<Type> &vprod)
 	{
 		for(int col=0;col<3;col++)
 		{
@@ -692,20 +757,8 @@ namespace Tool
 		}
 		vprod.M(3)=va.M(3);
 	}
-	template<typename Type>
-	Type Mat_Det_2X2(const Matrix2x2<Type> &m)
-	{
-		Type result=m.M(0,0)*m.M(1,1)-m.M(0,1)*m.M(1,0);
-		return result;
-	}
-	template<typename Type>
-	Type Mat_Det_3X3(const Matrix3x3<Type> &m)
-	{
-		Type result=(m.M(0,0)*(m.M(1,1)*m.M(2,2)-m.M(1,2)*m.M(2,1))-
-			m.M(0,1)*(m.M(1,0)*m.M(2,2)-m.M(2,0)*m.M(1,2))+
-			m.M(0,2)*(m.M(1,0)*m.M(2,1)-m.M(2,0)*m.M(1,1)));
-		return result;
-	}
+	
+	
 	template<typename Type>
 	Type Mat_Det_4X4(const Matrix4x4<Type> &m)
 	{
@@ -714,44 +767,8 @@ namespace Tool
 			m.M(0,2)*(m.M(1,0)*m.M(2,1)-m.M(2,0)*m.M(1,1)));
 		return result;
 	}
-	template<typename Type>
-	int Mat_Inverse_2X2(const Matrix2x2<Type> &m,Matrix2x2<Type> &mi)
-	{
-		float det=Mat_Det_2X2(m);
-		if(fabs(det)<EPSILON_E5)
-			return 0;
-		else{
-			float det_inv=1.0/det;
-			mi.M(0,0)=det_inv*(m.M(1,1));
-			mi.M(0,1)=det_inv*((-1)*m.M(0,1));
-			mi.M(1,0)=det_inv*((-1)*m.M(1,0));
-			mi.M(1,1)=det_inv*(m.M(1,1));
-			return 1;
-		}
-	}
-	template<typename Type>
-	int Mat_Inverse_3X3(const Matrix3x3<Type> &m,Matrix3x3<Type> &mi)
-	{
-		float det=Mat_Det_3X3(m);
-		if(fabs(det)<EPSILON_E5)
-			return 0;
-		else
-		{
-			float det_inv=1.0/det;
-			mi.M(0,0)=det_inv*(m.M(1,1)*m.M(2,2)-m.M(2,1)*m.M(1,2));
-			mi.M(1,0)=-det_inv*(m.M(1,0)*m.M(2,2)-m.M(2,0)*m.M(1,2));
-			mi.M(2,0)=det_inv*(m.M(1,0)*m.M(2,1)-m.M(2,0)*m.M(1,1));
+	
 
-			mi.M(0,1)=-det_inv*(m.M(0,1)*m.M(2,2)-m.M(2,1)*m.M(,2));
-			mi.M(1,1)=det_inv*(m.M(0,0)*m.M(2,2)-m.M(2,0)*m.M(0,2));
-			mi.M(2,1)=-det_inv*(m.M(0,0)*m.M(2,1)-m.M(2,0)*m.M(0,1));
-
-			mi.M(0,2)=det_inv*(m.M(0,1)*m.M(0,2)-m.M(1,1)*m.M(0,2));
-			mi.M(1,2)=-det_inv*(m.M(0,0)*m.M(1,2)-m.M(1,0)*m.M(0,2));
-			mi.M(2,2)=det_inv*(m.M(0,0)*m.M(1,1)-m.M(1,0)*m.M(0,1));
-
-		}
-	}
 	template<typename Type>
 	int Mat_Inverse_4X4(const Matrix4x4<Type> &m,Matrix4x4<Type> &mi)
 	{
@@ -782,23 +799,23 @@ namespace Tool
 		return 1;
 	}
 
-	//2D和3D参数化支持函数
+	//2D参数化直线函数
 
 	template<typename Type>
-	Parmline2<Type> Init_Param_Line2(const Vector2<Type> &p_init,const Vector2<Type> &p_term)
+	void Init_Param_Line2( Vector2<Type> p_init,Vector2<Type> p_term,Parmline2<float> &p)
 	{
-		
-		return Parmline2<Type>(p_init,p_term);
-				//Vector2_Build(p_init,p_term,p.v());
+		Vector2_Init(p.p0(),p_init);
+		Vector2_Init(p.p1(),p_term);
+		Vector2_Build(p_init,p_term,p.v());
 	}
 	template<typename Type>
-	void Compute_Parm_Line2D(const Parmline2<Type> &p,const Type &t,Vector2<Type> &pt)
+	void Compute_Parm_Line2(const Parmline2<Type> &p,const Type t,Vector2<Type> &pt)
 	{
 		pt.X()=p.p0().X()+p.v().X()*t;
 		pt.Y()=p.p0().Y()+p.v().Y()*t;
 	}
 	template<typename Type>
-	int Intersect_Parm_Lines2D(const Parmline2<Type> &p1,const Parmline2<Type> &p2,Type &t1,Type &t2)
+	int Intersect_Parm_Lines2(const Parmline2<Type> &p1,const Parmline2<Type> &p2,Type t1,Type t2)
 	{
 		float det_p1p2=(p1.v().X()*p2.v().Y()-p1.v().Y()*p2.v().X());
 		if(fabs(det_p1p2)<=EPSILON_E5)
@@ -815,7 +832,7 @@ namespace Tool
 			return PARM_LINE_INTERSECT_OUT_SEGMENT;
 	}
 	template<typename Type>
-	int Intersect_Parm_Lines2D(const Parmline2<Type> &p1,const Parmline2<Type> &p2,Point2<Type> &pt)
+	int Intersect_Parm_Lines2(const Parmline2<Type> &p1,const Parmline2<Type> &p2,Point2<Type> &pt)
 	{
 		float t1,t2,det_p1p2=(p1.v().X()*p2.v().Y()-p1.v().Y()*p2.v().X());
 		if(fabs(det_p1p2)<=EPSILON_E5)
@@ -833,18 +850,135 @@ namespace Tool
 		else
 			return PARM_LINE_INTERSECT_OUT_SEGMENT;
 	}
+
+
+	//3D参数化直线函数
+
+
 	template<typename Type>
-	void Init_Param_Line3(Point3<Type> &p_init,Point3<Type> &p_term,Parmline3<Type> &p)
+	void Init_Param_Line3(Vector3<Type> &p_init,Vector3<Type> &p_term,Parmline3<Type> &p)
 	{
 		Vector3_Init(p.p0(),p_init);
 		Vector3_Init(p.p1(),p_term);
 		Vector3_Build(p_init,p_term,p.v());
 	}
 	template<typename Type>
-	void Compute_Parm_Line3D(const Parmline3<Type> &p,const Type &t,Point3<Type> &pt)
+	void Compute_Parm_Line3(const Parmline3<Type> &p,const Type t,Vector3<Type> &pt)
 	{
 		pt.X()=p.p0().X()+p.v().X()*t;
 		pt.Y()=p.p0().Y()+p.v().Y()*t;
 		pt.Z()=p.p0().Z()+p.v().Z()*t;
 	}
+
+	//3D平面函数
+	template<typename Type>
+	void Plane3_Init(Plane3<Type> &plane,Vector3<Type> &p0,Vector3<Type> &normal,int normalize=0)
+	{
+		Vector3_Copy(plane.n(),p0);
+		if(!normalize)
+			Vector3_Copy(plane.n(),normal);
+		else
+		{
+			Vector3_Normalize(normal,plane.n());
+		}
+
+	}
+	template<typename Type>
+	Type Compute_Point_In_Plane3(Vector3<Type> &pt,Plane3<Type> &plane)
+	{
+		Type hs=plane.n().X()*(pt.X()-plane.p0().X())+plane.n.Y()*(pt.Y()-plane.p0().Y())+
+			    plane.n().Z()*(pt.Z()-plane.p0().Z());
+		return hs;
+	}
+	template<typename Type>
+	int Intersect_Param_Line3_Plane3(Parmline3<Type> &pline,Plane3<Type> &plane,Type t,Vector3<Type> &pt)
+	{
+
+	}
+
+
+	//四元数支持函数
+	template<typename Type>
+	void Quat_Add(const Quat<Type> &q1,const Quat<Type> &q2,Quat<Type> &qsum)
+	{
+		qsum.X()=q1.X()+q2.X();
+		qsum.Y()=q1.Y()+q2.Y();
+		qsum.Z()=q1.Z()+q2.Z();
+		qsum.W()=q1.W()+q2.W();
+	}
+
+	template<typename Type>
+	void Quat_Sub(const Quat<Type> &q1,const Quat<Type> &q2,Quat<Type> &qsub)
+	{
+		qsub.X()=q1.X()-q2.X();
+		qsub.Y()=q1.Y()-q2.Y();
+		qsub.Z()=q1.Z()-q2.Z();
+		qsub.W()=q1.W()-q2.W();
+	}
+	template<typename Type>
+	void Quat_Conjugate(const Quat<Type> &q,Quat<Type> &qconj)
+	{
+		qconj.X()=-q.X();
+		qconj.Y()=-q.Y();
+		qconj.Z()=-q.Z();
+		qconj.W()=q.W();
+	}
+	template<typename Type>
+	void Quat_Scale(Quat<Type> &q,Type k)
+	{
+		q.X()*=k;q.Y()*=k;
+		q.Z()*=k;q.W()*=k;
+	}
+	template<typename Type>
+	Type Quat_Norm(const Quat<Type> &q)
+	{
+		Type temp;
+		temp=sqrt(pow(q.W(),2)+pow(q.X(),2)+pow(q.Y(),2)+pow(q.Z(),2));
+		return temp;
+	}
+	template<typename Type>
+	Type Quat_Norm2(const Quat<Type> &q)
+	{
+		Type temp;
+		temp=pow(q.W(),2)+pow(q.X(),2)+pow(q.Y(),2)+pow(q.Z(),2);
+		return temp;
+	}
+	template<typename Type>
+	void Quat_Normalize(const Quat<Type> &q,Quat<Type> &qn)
+	{
+		Type temp=Quat_Norm(q);
+		Type temp_inv=1/temp;
+		qn.W()=q.W()*temp_inv;
+		qn.X()=q.X()*temp_inv;
+		qn.Y()=q.Y()*temp_inv;
+		qn.Z()=q.Z()*temp_inv;
+		
+	}
+	template<typename Type>
+	void Quat_Unit_Inverse(const Quat<Type> &q,Quat<Type> &qi)
+	{
+		qi.W()=q.W();
+		qi.X()=-qi.X();
+		qi.Y()=-qi.Y();
+		qi.Z()=-qi.Z();
+	}
+	template<typename Type>
+	void Quat_Inverse(const Quat<Type> &q,Quat<Type> &qi)
+	{
+		Type temp=Quat_Norm(q);
+		Type temp_inv=1.0/temp;
+		qi.W()=q.W()*temp_inv;
+		qi.X()=-q.X()*temp_inv;
+		qi.Y()=-q.Y()*temp_inv;
+		qi.Z()=-q.Z()*temp_inv;
+	}
+	template<typename Type>
+	void Quat_Mul(const Quat<Type> &q1,const Quat<Type> &q2,Quat<Type> &qprod)
+	{
+		qprod.W()=q1.W()*q2.W()-(q1.X()*q2.X()+q1.Y()*q2.Y()+q1.Z()*q2.Z());
+		qprod.X()=q1.W()*q2.X()+q1.X()*q2.W()+q1.Y()*q2.Z()-q1.Z()*q2.Y();
+		qprod.Y()=q1.W()*q2.Y()-q1.X()*q2.Z()+q1.Y()*q2.W()-q1.Z()*q2.X();
+		qprod.Z()=q1.W()*q2.Z()+q1.X()*q2.Y()-q1.Y()*q2.X()+q1.Z()*q2.W();
+	}
+
 }

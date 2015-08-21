@@ -2,6 +2,7 @@
 #include "Matrix4x4.h"
 #include "Matrix3x3.h"
 #include "Matrix2x2.h"
+#include "Vector2_class.h"
 namespace Tool
 {
 
@@ -94,6 +95,27 @@ namespace Tool
 	inline Type RAND_RANGE(const Type x,const Type y)
 	{
 		return (x)+(rand()%((y)-(x)+1));
+	}
+	template<typename Type>
+	void  Vector2_Init(Vector2<Type> &vdst, const Vector2<Type> &vsrc)
+	{
+		vdst.X()=vsrc.X();
+		vdst.Y()=vsrc.Y();
+		
+	}
+	template<typename Type>
+	void Vector3_Init(Vector3<Type> &vdst,const Vector3<Type> &vsrc)
+	{
+		vdst.X()=vsrc.X();
+		vdst.Y()=vsrc.Y();
+		vdst.Z()=vsrc.Z();
+	}
+	template<typename Type>
+	void Vector3_Copy(Vector3<Type> &vdst,Vector3<Type> &vsrc)
+	{
+		vdst.X()=vsrc.X();
+		vdst.Y()=vsrc.Y();
+		vdst.Z()=vsrc.Z();
 	}
 
 }
