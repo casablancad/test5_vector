@@ -98,6 +98,7 @@
     <ClInclude Include="Point3.h" />
     <ClInclude Include="Polar2_class.h" />
     <ClInclude Include="Polar2_struct.h" />
+    <ClInclude Include="Poly4.h" />
     <ClInclude Include="Quat_class.h" />
     <ClInclude Include="Quat_struct.h" />
     <ClInclude Include="triangle_dis_look.h" />

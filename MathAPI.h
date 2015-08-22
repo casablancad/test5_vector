@@ -965,7 +965,7 @@ namespace Tool
 	template<typename Type>
 	void Quat_Inverse(const Quat<Type> &q,Quat<Type> &qi)
 	{
-		Type temp=Quat_Norm(q);
+		Type temp=Quat_Norm2(q);
 		Type temp_inv=1.0/temp;
 		qi.W()=q.W()*temp_inv;
 		qi.X()=-q.X()*temp_inv;
@@ -979,6 +979,31 @@ namespace Tool
 		qprod.X()=q1.W()*q2.X()+q1.X()*q2.W()+q1.Y()*q2.Z()-q1.Z()*q2.Y();
 		qprod.Y()=q1.W()*q2.Y()-q1.X()*q2.Z()+q1.Y()*q2.W()-q1.Z()*q2.X();
 		qprod.Z()=q1.W()*q2.Z()+q1.X()*q2.Y()-q1.Y()*q2.X()+q1.Z()*q2.W();
+	}
+	template<typename Type>
+	void Quat_Triple_Product(const Quat<Type> &q1,const Quat<Type> &q2,const Quat<Type> &q3,Quat<Type> &qprod)
+	{
+		Quat<Type> temp;
+		Quat_Mul(q1,q2,temp);
+		Quat_Mul(temp,q3,qprod);
+	}
+	template<typename Type>
+	void Vector3_Theta_Quat(Quat<Type> &q,const Vector3<Type> &v,const Type theta)
+	{
+		Type theta_div=theta/2.0;
+		q.X()=sin(theta_div)*v.X();
+		q.Y()=sin(theta_div)*v.Y();
+		q.Z()=sin(theta_div)*v.Z();
+		q.W()=cos(theta_div);
+	}
+	template<typename Type>
+	void Vector4_Theta_Quat(Quat<Type> &q,const Vector4<Type> &v,const Type theta)
+	{
+		Type theta_div=theta/2.0;
+		q.X()=sin(theta_div)*v.X();
+		q.Y()=sin(theta_div)*v.Y();
+		q.Z()=sin(theta_div)*v.Z();
+		q.W()=cos(theta_div);
 	}
 
 }
