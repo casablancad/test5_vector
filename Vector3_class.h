@@ -88,7 +88,7 @@ namespace Tool
 		 
 	
 	protected:
-	private:
+		public:
 		Type m_M[3];
 
 	};

@@ -114,6 +114,12 @@
     <ClInclude Include="Poly4.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Polyf4.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Point4.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp">
